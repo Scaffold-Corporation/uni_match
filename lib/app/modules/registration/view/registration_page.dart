@@ -207,8 +207,7 @@ class _RegistrationPageState
                   Column(
                     children: [
                       controller.nameController.text.isNotEmpty &&
-                              controller.emailController.text.isNotEmpty&&
-                              controller.instaController.text.isNotEmpty
+                              controller.emailController.text.isNotEmpty
                           ? FadeInDown(
                         delay: Duration(milliseconds: 200),
                             child: TextButton(
@@ -223,8 +222,7 @@ class _RegistrationPageState
                                 onPressed: () async {
                                   FocusScope.of(context).unfocus();
                                   if (controller.nameController.text.isEmpty ||
-                                      controller.emailController.text.isEmpty ||
-                                      controller.instaController.text.isEmpty)
+                                      controller.emailController.text.isEmpty)
                                     Fluttertoast.showToast(msg: 'Preencha todos os campos!');
                                   else {
                                     if(controller.nameController.text.length > 3){

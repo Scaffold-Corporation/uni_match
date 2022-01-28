@@ -123,6 +123,8 @@ const String USER_MAX_AGE = "usuario_max_idade";
 const String USER_MAX_DISTANCE = "usuario_max_distancia";
 const String USER_SWIPES = "usuario_swipes";
 const String USER_TIME_SWIPES = "usuario_tempo_swipes";
+const String USER_SUPERLIKE = "usuario_superlike";
+const String USER_TIME_SUPERLIKE = "usuario_tempo_superlike";
 const String USER_SHOW_ME = "usuario_show_me";
 
 /// DATABASE FIELDS FOR UsuariosSinalizados COLLECTION  ///

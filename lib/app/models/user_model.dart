@@ -9,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:ntp/ntp.dart';
-import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:uni_match/app/datas/user.dart';
@@ -33,7 +32,7 @@ class UserModel{
   /// Other variables
   ///
   late Usuario user;
-  bool userIsVip = true;
+  bool userIsVip = false;
   bool isLoading = false;
   String activeVipId = '';
 
@@ -268,92 +267,6 @@ class UserModel{
     }
   }
 
-  /// Verify phone number and handle phone auth
-  Future<void> verifyPhoneNumber({
-    required String phoneNumber,
-    // Callback functions
-    required Function() checkUserAccount,
-    required Function(String verificationId) codeSent,
-    required Function(String errorType) onError,
-  }) async {
-    // Debug phone number
-    debugPrint('Número de Telefone : $phoneNumber');
-
-    phoneNumber = phoneNumber.replaceAll("(", "");
-    phoneNumber = phoneNumber.replaceAll(")", "");
-    phoneNumber = phoneNumber.replaceAll(" ", "");
-    phoneNumber = phoneNumber.replaceAll("-", "");
-
-    debugPrint('Telefone limpo: $phoneNumber');
-
-    /// **** CallBack functions **** ///
-
-    // Auto validate SMS code and return AuthResult to get user.
-    var verificationComplete = (fireAuth.AuthCredential authCredential) async {
-      // signIn with auto retrieved sms code
-      await _firebaseAuth
-          .signInWithCredential(authCredential)
-          .then((fireAuth.UserCredential userCredential) {
-        /// Auth user account
-        checkUserAccount();
-      });
-      // Debug
-      debugPrint('verificationComplete() -> signedIn');
-    };
-
-    var smsCodeSent = (String verificationId, List<int> code) async {
-      // Debug
-      debugPrint('smsCodeSent() -> verificationId: $verificationId');
-      // Callback function
-      codeSent(verificationId);
-    };
-
-    var verificationFailed = (fireAuth.FirebaseAuthException authException) async {
-      // CallBack function
-      onError('invalid_number');
-      // debugPrint error on console
-      debugPrint('verificationFailed() -> error: ${authException.message.toString()}');
-    };
-
-    var codeAutoRetrievalTimeout = (String verificationId) async {
-      // CallBack function
-      onError('timeout');
-      // Debug
-      debugPrint('codeAutoRetrievalTimeout() -> verificationId: $verificationId');
-    };
-
-    await _firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (authCredential) => verificationComplete(authCredential),
-        verificationFailed: (authException) => verificationFailed(authException),
-        codeAutoRetrievalTimeout: (verificationId) => codeAutoRetrievalTimeout(verificationId),
-        // called when the SMS code is sent
-        codeSent: (verificationId, [code]) => smsCodeSent(verificationId, [code!]));
-  }
-
-  /// Sign In with OPT sent to user device
-  Future<void> signInWithOTP(
-      {required String verificationId,
-      required String otp,
-      // Callback functions
-      required Function() checkUserAccount,
-      required VoidCallback onError}) async {
-    /// Get AuthCredential
-    final fireAuth.AuthCredential credential =
-        fireAuth.PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otp);
-
-    /// Try to sign in with provided credential
-    await _firebaseAuth
-        .signInWithCredential(credential)
-        .then((fireAuth.UserCredential userCredential) {
-      /// Auth user account
-      checkUserAccount();
-    }).catchError((error) {
-      // Callback function
-      onError();
-    });
-  }
-
   ///
   /// Create the User Account method
   ///
@@ -437,8 +350,9 @@ class UserModel{
         USER_SHOW_ME: null, // default
         USER_MAX_DISTANCE: AppModel().appInfo.freeAccountMaxDistance, // double
         USER_SWIPES: AppModel().appInfo.freeAccountSwipes, // int
-        USER_TIME_SWIPES: dateTime
-
+        USER_TIME_SWIPES: dateTime,
+        USER_SUPERLIKE: 1,
+        USER_TIME_SUPERLIKE: dateTime,
         // USER_MAX_DISTANCE: 1000, // double
       },
     }).then((_) async {
@@ -456,7 +370,7 @@ class UserModel{
       onSuccess();
     }).catchError((onError) {
       isLoading = false;
-      debugPrint('signUp() -> error');
+      debugPrint('signUp() -> error ($onError)');
       // Callback function
       onError(onError);
     });

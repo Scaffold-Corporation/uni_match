@@ -34,9 +34,10 @@ class ProfileBasicInfoCard extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProfileScreen(
-                          user: UserModel().user, showButtons: false, myUser: true,)));
+                    //todo: descomentar para proximas versões (com loja)
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (context) => ProfileScreen(
+                    //       user: UserModel().user, showButtons: false, myUser: true,)));
                   },
                   child: Container(
                     padding: const EdgeInsets.all(3.0),
@@ -101,6 +102,17 @@ class ProfileBasicInfoCard extends StatelessWidget {
                 cicleButton(
                   bgColor: Theme.of(context).accentColor,
                   padding: 13,
+                  icon:  Icon(Icons.remove_red_eye, color: Colors.white, size: 30,),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                          user: UserModel().user, showButtons: false, myUser: true,)));
+                  },
+                ),
+
+                cicleButton(
+                  bgColor: Theme.of(context).accentColor,
+                  padding: 13,
                   icon: SvgIcon("assets/icons/settings_icon.svg",
                       color: Colors.white, width: 30, height: 30),
                   onTap: () {
@@ -114,20 +126,24 @@ class ProfileBasicInfoCard extends StatelessWidget {
                   icon:  Icon(Icons.edit, color: Colors.white, size: 30,),
                   onTap: () {
                     Modular.to.pushNamed('/profile/edit');
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                          user: UserModel().user, showButtons: false, myUser: true,)));
                   },
                 ),
 
-                cicleButton(
-                  bgColor: Theme.of(context).accentColor,
-                  padding: 13,
-                  icon: Icon(Icons.workspaces_filled, color: Colors.white, size: 30,),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => DialogMenu(),
-                    );
-                  },
-                ),
+//todo: descomentar para proximas versões (com loja)
+                // cicleButton(
+                //   bgColor: Theme.of(context).accentColor,
+                //   padding: 13,
+                //   icon: Icon(Icons.workspaces_filled, color: Colors.white, size: 30,),
+                //   onTap: () {
+                //     showDialog(
+                //       context: context,
+                //       builder: (_) => DialogMenu(),
+                //     );
+                //   },
+                // ),
               ],
             ),
             SizedBox(height: 5.0,)

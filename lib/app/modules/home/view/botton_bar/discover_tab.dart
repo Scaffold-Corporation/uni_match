@@ -16,6 +16,7 @@ import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
+import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:uni_match/dialogs/its_match_dialog.dart';
 import 'package:uni_match/dialogs/vip_dialog.dart';
 import 'package:uni_match/plugins/swipe_stack/swipe_stack.dart';
@@ -41,11 +42,13 @@ class _DiscoverTabState extends State<DiscoverTab> {
   List<DocumentSnapshot>? _users;
   AppController _i18n = Modular.get();
   int swipeNum = 10;
+  int superLike = 0;
   Duration? swipeTime;
+  late DateTime dateTime;
 
   /// Get all Users
   Future<void> _loadUsers(List<DocumentSnapshot> dislikedUsers) async {
-    DateTime dateTime = await NTP.now();
+    dateTime = await NTP.now();
 
     _usersApi.getUsers(dislikedUsers: dislikedUsers).then((users) {
       // Check result
@@ -59,6 +62,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
         }
       }
       _limiteSwipes(dateTime);
+      _limiteSuperLike(dateTime);
       _recuperarDislike(dislikedUsers);
       // Debug
       print('DateTime now  -> $dateTime');
@@ -70,16 +74,44 @@ class _DiscoverTabState extends State<DiscoverTab> {
     });
   }
 
+  _limiteSuperLike(DateTime dateTime) async {
+    print('SuperLike Firebase:  ${UserModel().user.userSettings![USER_SUPERLIKE]}');
+
+    if(UserModel().user.userSettings![USER_SUPERLIKE] <= 0){
+      if (dateTime.difference(UserModel().user.userSettings![USER_TIME_SUPERLIKE].toDate()).inHours >= 24){
+        debugPrint("Tempo superior à 24 horas");
+
+        if (UserModel().userIsVip) {
+          debugPrint("Usuário VIP");
+
+          await UserModel()
+              .updateUserData(userId: UserModel().user.userId, data: {
+            '$USER_SETTINGS.$USER_SUPERLIKE': 4
+          });
+          setState(() => superLike = 4);
+
+        }else{
+
+          debugPrint("Usuário Normal");
+
+          await UserModel()
+              .updateUserData(userId: UserModel().user.userId, data: {
+            '$USER_SETTINGS.$USER_SUPERLIKE': 2
+          });
+          setState(() => superLike = 2);
+        }
+      }
+    }else{
+      setState(() => superLike = UserModel().user.userSettings![USER_SUPERLIKE]);
+    }
+  }
+
   _limiteSwipes(DateTime dateTime) async {
     if (UserModel().userIsVip) {
       setState(() => swipeNum = AppModel().appInfo.vipAccountSwipes);
     } else {
       if (dateTime.difference(UserModel().user.userSettings![USER_TIME_SWIPES].toDate()).inHours >= 24){
         debugPrint("Tempo superior à 24 horas");
-
-        await UserModel().updateUserData(
-            userId: UserModel().user.userId,
-            data: {'$USER_SETTINGS.$USER_TIME_SWIPES': dateTime});
 
         await UserModel()
             .updateUserData(userId: UserModel().user.userId, data: {
@@ -88,6 +120,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
 
         setState(() => swipeNum = AppModel().appInfo.freeAccountSwipes);
       } else {
+
         setState(() {
           swipeTime = Duration(hours: 24) - dateTime.difference(
               UserModel().user.userSettings![USER_TIME_SWIPES].toDate());
@@ -196,7 +229,8 @@ class _DiscoverTabState extends State<DiscoverTab> {
 
                 await UserModel()
                     .updateUserData(userId: UserModel().user.userId, data: {
-                  '$USER_SETTINGS.$USER_SWIPES': swipeNum});
+                  '$USER_SETTINGS.$USER_SWIPES': swipeNum,
+                  '$USER_SETTINGS.$USER_TIME_SWIPES': dateTime});
 
                 /// Control swipe position
                 switch (position) {
@@ -209,7 +243,10 @@ class _DiscoverTabState extends State<DiscoverTab> {
                         dislikedUserId: _users![index][USER_ID],
                         onDislikeResult: (r) =>
                             debugPrint('onDislikeResult: $r'));
-                    if(swipeNum == 0)setState(() {});
+
+                    if(swipeNum == 0)setState(() {
+                      swipeTime = Duration(hours: 24) - dateTime.difference(
+                          UserModel().user.userSettings![USER_TIME_SWIPES].toDate());});
 
                     break;
 
@@ -217,14 +254,27 @@ class _DiscoverTabState extends State<DiscoverTab> {
 
                   /// Swipe right and Like profile
                     _likeUser(context, clickedUserDoc: _users![index]);
-                    if(swipeNum == 0)setState(() {});
+                    if(swipeNum == 0)setState(() {
+                      swipeTime = Duration(hours: 24) - dateTime.difference(
+                          UserModel().user.userSettings![USER_TIME_SWIPES].toDate());});
 
                     break;
                   case SwiperPosition.SuperRight:
 
+                    superLike--;
+                    debugPrint("Super Like: $superLike");
+
+                    await UserModel()
+                        .updateUserData(userId: UserModel().user.userId, data: {
+                      '$USER_SETTINGS.$USER_SUPERLIKE': superLike,
+                      '$USER_SETTINGS.$USER_TIME_SUPERLIKE': dateTime});
+
                   /// Super Swipe right and Like profile
                     _likeUser(context, clickedUserDoc: _users![index], superLike: true);
-                    if(swipeNum == 0)setState(() {});
+                    if(swipeNum == 0)setState(() {
+                      swipeTime = Duration(hours: 24) - dateTime.difference(
+                          UserModel().user.userSettings![USER_TIME_SWIPES].toDate());});
+
                     break;
                 }
               }
@@ -362,13 +412,26 @@ class _DiscoverTabState extends State<DiscoverTab> {
             padding: 8,
             icon: Icon(Icons.star, size: 25, color: Colors.deepOrange),
             onTap: () {
-              /// Get card current index
-              final cardIndex = _swipeKey.currentState!.currentIndex;
+              print("AQUI $superLike");
 
-              /// Check card valid index
-              if (cardIndex != -1) {
-                /// Swipe right
-                _swipeKey.currentState!.superSwipeRight();
+              if(superLike > 0){
+                /// Get card current index
+                final cardIndex = _swipeKey.currentState!.currentIndex;
+
+                /// Check card valid index
+                if (cardIndex != -1) {
+                  /// Swipe right
+                  _swipeKey.currentState!.superSwipeRight();
+                }
+              }
+              else{
+                print("Compre superlike");
+                infoDialog(
+                    context,
+                    positiveAction: (){
+                      Navigator.of(context).pop();
+                    },
+                    message: "Seus SuperLikes acabaram 😭.\n\nAumente seu limite diário sendo UniVip!");
               }
             }),
         SizedBox(width: 15),

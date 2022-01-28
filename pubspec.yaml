@@ -219,4 +219,4 @@ flutter_icons:
 
 flutter_native_splash:
   image: assets/images/app_logo_white.png
-  color: "#FFFFFF"
+  color: "#e91c63"
