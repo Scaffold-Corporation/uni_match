@@ -301,6 +301,7 @@ class SwipeStackState extends State<SwipeStack> with SingleTickerProviderStateMi
   }
 
   void swipeRight() {
+    setState(() => _superLike = false);
     if (widget.children.length > 0 && _animationController.status != AnimationStatus.forward) {
       _animationType = 2;
       _animationX = Tween<double>(begin: 0, end: _baseContainerConstraints.maxWidth).animate(_animationController);
@@ -312,8 +313,9 @@ class SwipeStackState extends State<SwipeStack> with SingleTickerProviderStateMi
   }
 
   void superSwipeRight() {
+    print("superSwipeRight");
+    setState(() => _superLike = true);
     if (widget.children.length > 0 && _animationController.status != AnimationStatus.forward) {
-      setState(() => _superLike = true);
       _animationType = 2;
       _animationX = Tween<double>(begin: 0, end: _baseContainerConstraints.maxWidth).animate(_animationController);
       _animationY = Tween<double>(begin: 0, end: (_baseContainerConstraints.maxHeight / 2) * -1).animate(_animationController);
