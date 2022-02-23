@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:257892239405:android:b411ebeb7ea96cffed50a4",
+        "android_client_info": {
+          "package_name": "com.shr.flutter_social"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257892239405-gkv4osg2kpp8g31qnagdpma57em0u8pq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4soGkQBIXwiekuSw1sSXlbvmxssPQTGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257892239405-gkv4osg2kpp8g31qnagdpma57em0u8pq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "257892239405-bkv0nsg2u2kf38m33f92rb9o3n1237vj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unimatch.uni-match"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:257892239405:android:d2741ff77578f1c8ed50a4",
         "android_client_info": {
           "package_name": "com.unimatch.uni_match"
@@ -29,6 +65,49 @@
             {
               "client_id": "257892239405-gkv4osg2kpp8g31qnagdpma57em0u8pq.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "257892239405-bkv0nsg2u2kf38m33f92rb9o3n1237vj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unimatch.uni-match"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257892239405:android:d50b2868e13e17ebed50a4",
+        "android_client_info": {
+          "package_name": "com.unimatch_manager.unimatch_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257892239405-gkv4osg2kpp8g31qnagdpma57em0u8pq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4soGkQBIXwiekuSw1sSXlbvmxssPQTGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257892239405-gkv4osg2kpp8g31qnagdpma57em0u8pq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "257892239405-bkv0nsg2u2kf38m33f92rb9o3n1237vj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unimatch.uni-match"
+              }
             }
           ]
         }

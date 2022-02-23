@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +25,7 @@ void main()async{
   // Initialize firebase app
   await Firebase.initializeApp();
   // Initialize Google Mobile Ads SDK
-  // await MobileAds.instance.initialize();
+  await MobileAds.instance.initialize();
 
   if (Platform.isIOS) {
     await FirebaseMessaging.instance

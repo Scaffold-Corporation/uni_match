@@ -29,7 +29,7 @@ class RegistrationShowDialog extends StatelessWidget {
       /// Negative button
       TextButton(
           onPressed: () async {
-            Modular.to.navigate("/registration/furaFila");
+            Modular.to.navigate("/login/");
           },
           child: Text(("OK"),
               style: TextStyle(fontSize: 18, color: Colors.pinkAccent))),
