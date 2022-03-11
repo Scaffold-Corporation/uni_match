@@ -277,12 +277,14 @@ class _CheckinRegistrationPageState extends State<CheckinRegistrationPage> {
                                 "nome":widget.controller.nameController.text,
                                 "email":widget.controller.emailController.text,
                                 "instagram":widget.controller.instaController.text,
-                                "universidade":widget.controller.universidadeController.text,
-                                "curso":widget.controller.cursoControler.text,
+                                "universidade":widget.controller.universidadeController,
+                                "curso":widget.controller.course,
+                                "tipoGraduacao":widget.controller.tipoGraduacao,
                                 "anoIngresso":widget.controller.anoiController.text,
                                 "anoConclusao":widget.controller.anofController.text,
                                 "codigoAtletica":widget.controller.codigoAtleticaController.text,
                                 "comprovante": imageLink,
+                                "datadeInteresse": DateTime.now(),
                               }
                           );
                           _pr.hide().whenComplete(() {

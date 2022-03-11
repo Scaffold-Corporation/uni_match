@@ -174,8 +174,11 @@ dependencies:
   #Biblioteca para request
   dio: ^4.0.0
 
-    #Biblioteca para acessar web
+  #Biblioteca para acessar web
   webview_flutter: ^2.0.13
+
+  #Biblioteca para requerer dados das universidades
+  universities: ^1.0.1+2
 
   update_app: ^0.1.7
   flutter_icons: ^1.1.0
