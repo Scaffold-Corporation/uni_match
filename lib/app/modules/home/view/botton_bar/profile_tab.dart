@@ -40,7 +40,7 @@ class ProfileTab extends StatelessWidget {
             SizedBox(height: 20),
 
             /// Sign out button card
-            SignOutButtonCard(),
+            // SignOutButtonCard(),
 
             SizedBox(height: 5),
 
